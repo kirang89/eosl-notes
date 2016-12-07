@@ -32,6 +32,8 @@ active at any time.
 
 ## Linear Regression Model
 
+*Linear regression is a statistical procedure for predicting the value of a dependent variable from an independent variable when the relationship between the variables can be described with a linear model.*
+
 The Linear Model for prediction is represented as:
 $$
 \hat{Y} = \beta_0 + \sum_{j=1}^p X_j \beta_j
@@ -42,6 +44,16 @@ $$
 \hat{Y} = X^T \hat{\beta}
 $$
 The term $\beta_0$ is the intercept, also known as the **bias** in machine learning. 		
+
+
+
+------
+
+**Why should we assume that the effects of different independent variables(X) on the expected value of the dependent variable(Y) are additive?** *This is a very strong assumption, stronger than most people realize.  It implies that the marginal effect of one independent variable  does not depend on the current values of other independent variables.  But… why shouldn’t it?  It’s conceivable that one independent variable could amplify the effect of another, or that its effect might vary systematically over time.*
+
+------
+
+
 
 The linear model makes huge assumptions about structure and yields stable but possibly   		inaccurate predictions. The method of k-nearest neighbors makes very mild structural assumptions: its predictions are often accurate but can be unstable.
 
@@ -93,11 +105,47 @@ $$
 
 - Developed for approximating the binomial distribution
 
-- Normal distributions have many convenient properties, so random variates with unknown distributions are often assumed to be normal, especially in physics and astronomy. Although this can be a dangerous assumption, it is often a good approximation due to a surprising result known as the **central limit theorem**. *This theorem states that the mean  of any set of variates with any distribution having a finite mean and variance tends to the normal distribution.* Many common attributes such as test scores, heights of people, errors in measurement etc., follow roughly normal distributions, with few members at the high and low ends and many in the middle.
+- Normal distributions have many convenient properties, so random variates with unknown distributions are often assumed to be normal, especially in physics and astronomy. Although this can be a dangerous assumption, it is often a good approximation due to a surprising result known as the **Central Limit Theorem**. *The theorem states that the sum or average of a sufficiently large number of independent random variables–whatever their individual distributions–approaches a normal distribution.* Many common attributes such as test scores, heights of people, errors in measurement etc., follow roughly normal distributions, with few members at the high and low ends and many in the middle.
 
   ​
 
   ![Example of a Gaussian Curve](http://introcs.cs.princeton.edu/java/11gaussian/images/stddev.png)
+
+
+
+
+------
+
+#### An Estimation Example using the Least Squares method
+
+As a result of an experiment, four  $(x,y)$ data points were obtained,$(1,6), (2,5), (3,7), (4, 10)$.  We hope to find a line  $y=\beta _{1}+\beta _{2}x$ that best fits these four points. In other words, we would like to find the numbers $\beta_1$ and $\beta_2$ that approximately solve the overdetermined linear system of four equations in two unknowns in some "best" sense.
+$$
+\beta _{1}+1\beta _{2}= 6 \\ \beta _{1}+2\beta _{2} =5 \\ \beta _{1}+3\beta _{2}=7 \\ \beta _{1}+4\beta _{2}= 10
+$$
+​	The "error", at each point, between the curve fit and the data is the difference between the 	right- and left-hand sides of the equations above. The least squares approach to solving this problem is to try to make the sum of the squares of these errors as small as possible; that is, to find the minimum of the function
+$$
+S(\beta _{1},\beta _{2}) = \left[6-(\beta _{1}+1\beta _{2})\right]^{2} + \left[5-(\beta _{1}+2\beta _{2})\right]^{2} + \left[7-(\beta _{1}+3\beta _{2})\right]^{2} + \left[10-(\beta _{1}+4\beta _{2})\right]^{2} \\= 4\beta _{1}^{2} + 30\beta _{2}^{2} + 20\beta _{1}\beta _{2} - 56\beta _{1} - 154\beta _{2} + 210
+$$
+
+
+The minimum is determined by calculating the [partial derivatives](https://www.wikiwand.com/en/Partial_derivative) of ![S(\beta _{1},\beta _{2})](https://wikimedia.org/api/rest_v1/media/math/render/svg/6aee70482be7faa52d3aead2d4f0987d3f92f171) with respect to ![\beta _{1}](https://wikimedia.org/api/rest_v1/media/math/render/svg/eeeccd8b585b819e38f9c1fe5e9816a3ea01804c) and ![\beta _{2}](https://wikimedia.org/api/rest_v1/media/math/render/svg/8d30285b40d7488ae6caef3beb7106142869fbea) and setting them to zero
+$$
+{\frac {\partial S}{\partial \beta _{1}}} = 0 = 8\beta _{1}+20\beta _{2}-56 \\
+
+\hspace{0.5cm}{\frac {\partial S}{\partial \beta _{2}}} = 0 =20\beta _{1}+60\beta _{2}-154.
+$$
+
+
+This results in a system of two equations in two unknowns, called the normal equations, which give, when solved
+$$
+\beta_{1} = 3.5\\
+\beta_{2} = 1.4
+$$
+and the equation ![y=3.5+1.4x](https://wikimedia.org/api/rest_v1/media/math/render/svg/90f80928662ab155de21f253fbd1512808986d5d) of the line of best fit. The [residuals](https://www.wikiwand.com/en/Residual_(statistics)), that is, the discrepancies between the ![y](https://wikimedia.org/api/rest_v1/media/math/render/svg/b8a6208ec717213d4317e666f1ae872e00620a0d) values from the experiment and the ![y](https://wikimedia.org/api/rest_v1/media/math/render/svg/b8a6208ec717213d4317e666f1ae872e00620a0d) values calculated using the line of best fit are then found to be ![1.1,](https://wikimedia.org/api/rest_v1/media/math/render/svg/0f2ee9cbd21913f338465626f4acddc2c265e4bc) ![-1.3,](https://wikimedia.org/api/rest_v1/media/math/render/svg/5d283bb344d339f0ea3aee2498e69a1dd84f4a9a) ![-0.7,](https://wikimedia.org/api/rest_v1/media/math/render/svg/7c510c19eeb5a4c12d39b57069b867713b42c245) and ![0.9](https://wikimedia.org/api/rest_v1/media/math/render/svg/12fb1a4ae271b93c61fe117b691677bb27609f25) (see the picture on the right). The minimum value of the sum of squares of the residuals is ![S(3.5,1.4)=1.1^{2}+(-1.3)^{2}+(-0.7)^{2}+0.9^{2}=4.2.](https://wikimedia.org/api/rest_v1/media/math/render/svg/a74f0a3448ba5046b3c39120cc52154b211e39e9)
+
+------
+
+
 
 ### Nearest Neighbours
 
@@ -218,3 +266,41 @@ All the models described above and many others discussed in later chapters have 
 
 
 The training error tends to decrease whenever we increase the model complexity, that is, whenever we fit the data harder. However with too much fitting, the model adapts itself too closely to the training data, and will not generalize well (i.e., have large test error). In that case the predictions $\hat{f}(x_0)$ will have large variance. In contrast, if the model is not complex enough, it will *underfit* and may have large bias, again resulting in poor generalization. 
+
+
+
+# Chapter 3: Linear Methods for Regression
+
+*Linear models* were largely developed in the precomputer age of statistics. For prediction purposes they can sometimes outperform fancier nonlinear models, especially in situations with small numbers of training cases, low signal-to-noise ratio or sparse data. Finally, linear methods can be applied to transformations of the inputs and this considerably expands their scope. These generalizations are sometimes called *basis-function* methods.
+
+
+
+------
+
+*Many non-linear techniques are direct generalizations of the linear methods.*
+
+------
+
+
+
+As seen in Chapter 2, the predicted values for the input vector using the linear model is given by
+$$
+\hat{y} = X\hat{\beta} = X (X^TX)^{-1} X^Ty
+$$
+The matrix $H = X (X^TX)^{-1} X^T$ is called the **hat matrix**. 
+
+
+
+![least squares estimation](https://4.bp.blogspot.com/-wQwYTZR1cU0/Uv41AN0MZII/AAAAAAAABnQ/jRtYqBvKB7Y/s1600/Screen+Shot+2014-02-14+at+5.21.38+PM.png)
+
+We minimize $RSS(β) = (y −Xβ^2)$ by choosing $\hat{\beta}$ so that the residual vector $y − \hat{y}$ is orthogonal to this subspace. This orthogonality is expressed in the figure above, and the resulting estimate $\hat{y}$ is hence the **orthogonal projection** of $y$ onto this subspace. The hat matrix $H$ computes the orthogonal projection, and hence it is also known as a **projection matrix**.
+
+​	It might happen that the columns of $X$ are not linearly independent, so that $X$ is not of full rank. This would occur, for example, if two of the inputs were perfectly correlated, (e.g.,$ x_2 = 3 x_1$). Then $X^TX$ is singular and the least squares coefficients  $\hat{\beta}$ are not uniquely defined. However, the fitted values $\hat{y} = X \hat{\beta}$ are still the projection of $y$ onto the column space of $X$; there is just more than one way to express that projection in terms of the column vectors of $X$. The non-fullrank case occurs most often when one or more qualitative inputs are coded in a *redundant* fashion. There is usually a natural way to resolve the non-unique representation, by *recoding and/or dropping redundant columns in $X$*.
+
+
+
+A measure of the absolute amount of variability in a variable is (naturally) its **variance**, which is defined as its *average squared deviation from its own mean*.
+
+
+
+In using *linear* models for prediction, it turns out very conveniently that the *only* statistics of interest (at least for purposes of estimating coefficients to minimize squared error) are the **mean** and **variance** of each variable and the **correlation coefficient** between each pair of variables. The coefficient of correlation between X and Y is commonly denoted by $r_{XY}$, and it measures the strength of the linear relationship between them on a relative (i.e., unitless) scale of $-1$ to $+1$. That is, it measures the extent to which a linear model can be used to predict the deviation of one variable from its mean given knowledge of the other's deviation from its mean at the same point in time.
