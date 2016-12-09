@@ -363,5 +363,42 @@ Note: *In some situations it does help to combine the regressions.*
 Two reasons why least squares estimates aren't satisfactory
 
 - *prediction accuracy*: the estimates often have low bias but large variance. Prediction accuracy can sometimes be improved by shrinking or setting some coefficients to zero. By doing so we sacrifice a little bit of bias to reduce the variance of the predicted values, and hence may improve the overall prediction accuracy.
+
 - *interpretation*. With a large number of predictors, we often would like to determine a smaller subset that exhibit the strongest effects. In order to get the “big picture,” we are willing to sacrifice some of the small details.
+
+  ​
+
+
+The different methods of subset selection are:
+
+- Best Subset Selection
+- Forward- and Backward-Stepwise Selection
+- Forward-Stagewise Regression
+
+### Regularization
+
+Regularization is a type of bias that tells us which models to prefer when it cannot be infered from the data.
+
+The main regularization methods used are *L1* and *L2*.
+
+![L1 and L2 regularization](https://qph.ec.quoracdn.net/main-qimg-ac4be5e84246c66511eeda735815444b?convert_to_webp=true)
+
+It is used to *reduce variance* in the model using a constraint based on the method used to regularize. When there are many correlated variables in a linear regression model, their coefficients can become poorly determined and exhibit high variance. A wildly large positive coefficient on one variable can be canceled by a similarly large negative coefficient on its correlated cousin. By imposing a size constraint on the coefficients, this problem is alleviated.
+
+### Singular Value Decomposition
+
+SVD can be seen as a method for transforming correlated variables into a set of uncorrelated ones that better expose the various relationships among the original
+data items. At the same time, SVD is a method for identifying and ordering the dimensions along which data points exhibit the most variation. This ties in to the third way of viewing SVD, which is that once we have identified where the most variation is, it’s possible to find the best approximation of the original data points using fewer dimensions. Hence, SVD can be seen as a method for *data reduction*.
+
+SVD is based on a theorem from linear algebra which says that a rectangular matrix $A$ can be broken down into the product of three matrices - an orthogonal matrix $U$, a diagonal matrix $S$, and the transpose of an orthogonal matrix $V$ . The theorem is usually presented something like this:
+$$
+A_{mn} = U_{mn}S_{mn}V_{mn}^T
+$$
+where $U^TU = I$, $V^T V = I$; the columns of $U$ are orthonormal eigenvectors of $AA^T$
+, the columns of $V$ are orthonormal eigenvectors of $A^TA$, and $S$ is a diagonal matrix containing the square roots of eigenvalues from $U$ or $V$ in descending order.
+
+The basic idea behind SVD is *taking a high dimensional, highly variable set of*
+*data points and reducing it to a lower dimensional space that exposes the substructure of the original data more clearly and orders it from most variation to the least*. What makes SVD practical for NLP applications is that you can simply ignore variation below a particular threshold to massively reduce your data but be assured that the main relationships of interest have been preserved.
+
+Some applications of SVD include *finding redundancies in data, clearing out noise in data, multivariable control, matrix approximation*.
 
