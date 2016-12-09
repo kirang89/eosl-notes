@@ -55,7 +55,7 @@ The term $\beta_0$ is the intercept, also known as the **bias** in machine learn
 
 
 
-The linear model makes huge assumptions about structure and yields stable but possibly   		inaccurate predictions. The method of k-nearest neighbors makes very mild structural assumptions: its predictions are often accurate but can be unstable.
+In using *linear* models for prediction, it turns out very conveniently that the *only* statistics of interest (at least for purposes of estimating coefficients to minimize squared error) are the **mean** and **variance** of each variable and the **correlation coefficient** between each pair of variables. The coefficient of correlation between X and Y is commonly denoted by $r_{XY}$, and it measures the strength of the linear relationship between them on a relative (i.e., unitless) scale of $-1$ to $+1$. That is, it measures the extent to which a linear model can be used to predict the deviation of one variable from its mean given knowledge of the other's deviation from its mean at the same point in time.
 
 The important methods for fitting a linear model are:
 
@@ -122,7 +122,7 @@ As a result of an experiment, four  $(x,y)$ data points were obtained,$(1,6), (
 $$
 \beta _{1}+1\beta _{2}= 6 \\ \beta _{1}+2\beta _{2} =5 \\ \beta _{1}+3\beta _{2}=7 \\ \beta _{1}+4\beta _{2}= 10
 $$
-​	The "error", at each point, between the curve fit and the data is the difference between the 	right- and left-hand sides of the equations above. The least squares approach to solving this problem is to try to make the sum of the squares of these errors as small as possible; that is, to find the minimum of the function
+​	The "error", at each point, between the curve fit and the data is the difference between the right- and left-hand sides of the equations above. The least squares approach to solving this problem is to try to make the sum of the squares of these errors as small as possible; that is, to find the minimum of the function
 $$
 S(\beta _{1},\beta _{2}) = \left[6-(\beta _{1}+1\beta _{2})\right]^{2} + \left[5-(\beta _{1}+2\beta _{2})\right]^{2} + \left[7-(\beta _{1}+3\beta _{2})\right]^{2} + \left[10-(\beta _{1}+4\beta _{2})\right]^{2} \\= 4\beta _{1}^{2} + 30\beta _{2}^{2} + 20\beta _{1}\beta _{2} - 56\beta _{1} - 154\beta _{2} + 210
 $$
@@ -159,6 +159,10 @@ where $N_k(x)$ is the neighbourhood of x defined by k closest points in the trai
 
 
 
+The linear model makes huge assumptions about structure and yields stable but possibly   		inaccurate predictions. The method of k-nearest neighbors makes very mild structural assumptions: its predictions are often accurate but can be unstable.
+
+
+
 ## Statistical Decision Theory
 
 We seek a function $f(x)$ for predicting Y given input X. This theory requires a **loss function** $L(Y, f(x))$ for penalizing errors in prediction, and by far the most convenient method is the **squared error loss** $L(Y, f(X)) = (Y  - f(X))^2$. The **Expected (Squared)  Prediction Error**, a criteria for determining $f$ is
@@ -166,7 +170,7 @@ $$
 EPE(f) = E(Y - f(X))^2  \\
 \hspace{4 cm} = \int [y - f(x)]^2 Pr(dx, dy)
 $$
-where $E(Y - f(X))^2 $ is the $L2$ loss function . The conditional expectation $f(x)$ is determined using:
+where $E(Y - f(X))^2 $ is the $L2$ loss function. The conditional expectation $f(x)$ is determined using:
 $$
 f(x) = E(Y | X = x)
 $$
@@ -219,7 +223,7 @@ The approach taken in mathematics and statistics has been from a perspective of 
 
 ## Maximum-Likelihood Estimation
 
-While least squares is generally very convenient, it is not the only crite- rion used and in some cases would not make much sense. A more general principle for estimation is *maximum likelihood estimation*. Suppose we have a random sample $y_i, i = 1, . . . ,N$ from a density $Pr_θ(y)$ indexed by some parameters $\theta$ *(many approximations have associated a set of parameters $\theta$ that can be modified to suit the data at hand)*. The log-probability of the observed sample is
+While least squares is generally very convenient, it is not the only criterion used and in some cases would not make much sense. A more general principle for estimation is *maximum likelihood estimation*. Suppose we have a random sample $y_i, i = 1, . . . ,N$ from a density $Pr_θ(y)$ indexed by some parameters $\theta$ *(many approximations have associated a set of parameters $\theta$ that can be modified to suit the data at hand)*. The log-probability of the observed sample is
 $$
 L(\theta) = \sum_{i=1}^N log Pr_\theta(y_i)
 $$
@@ -299,8 +303,65 @@ We minimize $RSS(β) = (y −Xβ^2)$ by choosing $\hat{\beta}$ so that the resid
 
 
 
+Rank deficiencies can also occur in signal and image analysis, where the number of inputs $p$ can exceed the number of training cases $N$. In this case, the features are typically reduced by *filtering* or else the fitting is controlled by *regularization*.
+
+
+
 A measure of the absolute amount of variability in a variable is (naturally) its **variance**, which is defined as its *average squared deviation from its own mean*.
 
+### Z-Score (Standardized Coefficient)
 
+If you are a machine learning guy more than a statistics guy, you’ve probably heard you should *standardize* or *normalize* your variables before putting them into a machine learning model.
 
-In using *linear* models for prediction, it turns out very conveniently that the *only* statistics of interest (at least for purposes of estimating coefficients to minimize squared error) are the **mean** and **variance** of each variable and the **correlation coefficient** between each pair of variables. The coefficient of correlation between X and Y is commonly denoted by $r_{XY}$, and it measures the strength of the linear relationship between them on a relative (i.e., unitless) scale of $-1$ to $+1$. That is, it measures the extent to which a linear model can be used to predict the deviation of one variable from its mean given knowledge of the other's deviation from its mean at the same point in time.
+For example, if you’re doing linear regression and $x_1$ varies from $0..1$ and $x_2$ varies from $0..1000$, the weights $\beta_1$ and $\beta_2$ will give an inaccurate picture as to their importance.
+
+Well, the z-score actually *is* the standardized variable.
+
+I would avoid this terminology if possible, because in machine learning we usually think of a “score” as the output of a model, i.e. I’m getting the “score” of a set of links because I want to know in what order to rank them.
+$$
+z = \frac {x - \mu} {\sigma}
+$$
+So instead of thinking of “z-scores”, think of “I need to standardize my variables before using them in my machine learning model so that the effect of any one variable is on the same scale as the others”.
+
+The Z-Score of a variable measures the effect of dropping the variable from the model. A Z-score greater than 2 in absolute value is approximately significant at the 5% level.
+
+### Chi-squared Distribution
+
+A standard normal deviate is a random sample from the [standard normal distribution](javascript:glossary('standard_normal')). The Chi Square distribution is the distribution of the sum of squared [standard normal deviates](javascript:glossary('z_score')). The [degrees of freedom](javascript:glossary('df')) of the distribution is equal to the number of standard normal deviates being summed.
+
+As the degrees of freedom increases, the Chi Square distribution approaches a normal distribution.
+
+​	The Chi Square distribution is very important because many test statistics are approximately distributed as Chi Square. Two of the more common tests using the Chi Square distribution are tests of deviations of differences between theoretically expected and observed frequencies (one-way tables) and the relationship between categorical variables (contingency tables). 
+
+### F-statistics and p-value
+
+You can use the F-statistic when deciding to support or reject the **null hypothesis** (null hypothesis, $H_0$ is the commonly accepted fact). The F statistic must be used in combination with the **p-value** (used in hypothesis testing to support or reject the null hypothesis) when you are deciding if your overall results are significant. Why? If you have a significant F Statistic, it doesn’t mean that *all* your variables are significant. The statistic is just comparing the *joint effect* of all the variables together.
+
+If you are using the F Statistic in **regression analysis**, follow the below steps:
+
+- If $p < \alpha$ (a commonly used value is $\alpha = 0.05$ ), do next step
+- Study the individual p values to find out which of the individual variables are [statistically significant.](http://www.statisticshowto.com/what-is-statistical-significance/). (Using Z-score or chi-square method)
+
+$\alpha$ is also known as the **Significance Level**. It is a measure of how certain we want to be about our results - low significance values correspond to a low probability that the experimental results happened by chance, and vice versa. Significance levels are written as a decimal (such as $0.01$), which corresponds to the *percent chance that the experimental results happened by chance* (in this case, $1\%$).
+
+By convention, scientists usually set the significance value for their experiments at $0.05$, or $5 \%$. This means that experimental results that meet this significance level have, at most, a $5\%$ chance of being the result of pure chance. In other words, there's a $95\%$ chance that the results were caused by the your manipulation of experimental variables, rather than by chance. For most experiments, being $95\%$ sure about a correlation between two variables is seen as "successfully" showing a correlation between the two.
+
+**Example Use-Case**: *Let's say that, in our town, we randomly selected 150 speeding tickets which were given to either red or blue cars. We found that **90** tickets were for red cars and **60** were for blue cars. These differ from our expected results of **100** and **50,** respectively. Did our experimental manipulation (in this case, changing the source of our data from a national one to a local one) cause this change in results, or are our town's police as biased as the national average suggests, and we're just observing a chance variation? A p value will help us determine this.*
+
+### Multiple Linear Regression Model
+
+ In simple (univariate) linear regression, the input is *1-D*. In multiple linear regression, the input is *N-dimensional* (any number of dimensions). We use the **Gram-Schmidt** procedure to compute the estimates as well as the least squares fit.
+
+### Multiple Outputs
+
+Multiple Outputs do not affect one another's least square estimate. So the coefficients for the $kth$ outcome are simply the result of linear regression of $y_k$ on inputs $(x_0, x_1….x_p)$. 
+
+Note: *In some situations it does help to combine the regressions.*
+
+### Subset Selection
+
+Two reasons why least squares estimates aren't satisfactory
+
+- *prediction accuracy*: the estimates often have low bias but large variance. Prediction accuracy can sometimes be improved by shrinking or setting some coefficients to zero. By doing so we sacrifice a little bit of bias to reduce the variance of the predicted values, and hence may improve the overall prediction accuracy.
+- *interpretation*. With a large number of predictors, we often would like to determine a smaller subset that exhibit the strongest effects. In order to get the “big picture,” we are willing to sacrifice some of the small details.
+
